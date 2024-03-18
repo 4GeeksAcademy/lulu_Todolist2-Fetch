@@ -1,127 +1,132 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+const Home = () => {
+	const [inputValue, setInputValue] = useState("");
+	const [todos, setTodos] = useState([]);
 
-function App(){
-	//hook---//
-const [newItem, setNewItem] = useState("");
-//-- array con toos los items//
-const[items, setItems] = useState ([]);
 
-//adding Fetch //
+	const changeInputValue = (e) => { setInputValue(e.target.value) };
 
-//GET//
+	const inputKeyPress = (event) => {
+		const updateValue = {
+			done: true,
+			label: inputValue
+		}
+		if (event.key === "Enter") {
+			setTodos([...todos, updateValue])
+			updateTodo() 
+			setInputValue("")  
+		}
+	};
 
-const getInfo = () => {
-	fetch('https://playground.4geeks.com/apis/fake/todos/user/alesanchezr', {
-		method: "GET",
-	})
-	console.log(resp.ok);
-	console.log(resp.status);
-	if (resp.status === 400){
-		console.log('create nuevo usuario')
-		createUser()};
-		return resp.json();
+	const deleteEvent = (index) => {
+		const listaActualizada = todos.filter((t, currentIndex) => index !== currentIndex)
+		setTodos(listaActualizada)
 	}
 
+	const deleteEventAll = () => {
+		setTodos([]);
+	};
 
-const putInfo = () => {
-	fetch('https://playground.4geeks.com/apis/fake/todos/user/alesanchezr', {
-      method: "PUT",
-      body: JSON.stringify(todos),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(resp => {
-        console.log(resp.ok); // Será true si la respuesta es exitosa
-        console.log(resp.status); // El código de estado 200, 300, 400, etc.
-        console.log(resp.text()); // Intentará devolver el resultado exacto como string
-        return resp.json(); // Intentará parsear el resultado a JSON y retornará una promesa donde puedes usar .then para seguir con la lógica
-    })
-    .then(data => {
-        // Aquí es donde debe comenzar tu código después de que finalice la búsqueda
-        console.log(data); // Esto imprimirá en la consola el objeto exacto recibido del servidor
-    })
-    .catch(error => {
-        // Manejo de errores
-        console.log(error);
-    });
+	//	fetch code.....// se que he creado mi usuario... pero realmente no entiendo el resto.... 
+	// no se como hacerle sync con mi todo list o lo que se supone que tiene que poner... 
 
-};
-
-//POST//
-const createUser = () => {
-	fetch('https://playground.4geeks.com/apis/fake/todos/user/alesanchezr', {
-	method: "POST",
-	body: JSON.stringify(todos),
-	headers: {
-		"Content-Type": "application/json"
-	}
-
-}
-
-//-- funcion con alerta si no escriben//
-function addItem() {
-	if (!newItem){
-		alert("Enter a item.");
-		return;
-	}
-
-	//helper function//
-
-	const item = {
-		id: Math.floor(Math.random() * 100),
-		value: newItem
-};
-
-//variar items from old to new adds.//
+	const urlTodos = "https://playground.4geeks.com/apis/fake/todos/user/lulu828";
 
 
-setItems(oldList => [...oldList, item]); //old list mas el item nuevo//
-setNewItem(""); //new item back to empty string up on array
-}
 
-	function deleteItem(id){
-		const  newArray = items.filter(item =>item.id !== id);
-		setItems(newArray);
+	useEffect(() => {
+		getTask()
+	}, [])
+
+	const getTask = () => {
+		fetch(urlTodos)
+		method="GET"
 		
+			.then((response) => response.json())
+			.then((data) => setTodos(data))
+			.catch((err) => err);
+	};
+
+	useEffect(() => {
+		newTask()
+	}, [todos]);
+
+	//POST//
+
+	const newTask = () => {
+		fetch(urlTodos, {
+			method: "POST",
+			body: JSON.stringify(todos),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+			.then((response) => { return response.json() })
+			.then((data) => { console.log(data) })
+			.catch((err) => { return err })
+	};
+
+	const updateTodo = () => {
+		const newTodo = {
+			done: false,
+			label: inputValue
+		}
+
+
+		// PUT //
+
+		fetch(urlTodos, {
+			method: "PUT",
+			body: JSON.stringify([...todos, newTodo]),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+			.then((response) => { return response.json() })
+			.then((data) => { console.log(data) })
+			.catch((err) => { return err })
 
 	}
 
 
 	return (
-		<div className="App text-center">
+		<div className="container text-center">
+			<h1>My todos </h1>
+			<ul>
+				<li>
+					<input
+						type="text"
+						placeholder="What do you need to do?"
+						value={inputValue}
+						onChange=/* {changeInputValue} */ {urlTodos}
+						onKeyDown={inputKeyPress} />
 
-			<h1> To do List</h1>
+					<button type="button" class="btn btn-success btn-sm onClick={addtotodolist}">Enter</button>
 
-		<input
-		type = "text"
-		placeholder="What to do..."
-		value={newItem}
-		onChange={e => setNewItem(e.target.value)}
-		/>
-
-		<button onClick={() => addItem ()}>Add</button>
-
-		<ul>
-
-			{items.map(item => {
-
-				return(
-					<li key={item.id}><strong>
-						{item.value}</strong>
-					<button onClick={() => deleteItem(item.id)}>
-						<i className="fa-solid fa-trash"></i></button>
-					
+				</li>
+				
+				{todos.map((value, index) => (
+					<li key={index}
+						style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', }} >
+						{/* {console.log(value.label)} */}
+						{value.label}
+						
+						<button
+							className="btn btn-danger"
+							onClick={() => deleteEvent(index)}>X</button>
 					</li>
-				)
-			})}
-		</ul>
-		<div> # of tasks.</div>
+					
+				))}
+			</ul>
+			<div className="divCenter d-flex justify-content-center m-3">
+				<button className="btn btn-warning" onClick={deleteEventAll}>Delete All</button>
+			</div>
+
+			<div className="etiqueta form-control col-2 btn btn-success" style={{ width: '100px' }}>{todos.length} item left</div>
 		</div>
 	);
-}
+};
 
-export default App;
+export default Home;
+	
