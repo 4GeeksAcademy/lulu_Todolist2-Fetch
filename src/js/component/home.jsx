@@ -30,16 +30,18 @@ const Home = () => {
 		setTodos([]);
 	};
 
-	//	fetch code.....// se que he creado mi usuario... pero realmente no entiendo el resto.... 
-	// no se como hacerle sync con mi todo list o lo que se supone que tiene que poner... 
+	///
 
 	const urlTodos = "https://playground.4geeks.com/apis/fake/todos/user/lulu828";
+	                //esta url, al final cambiamos el user naame por lo que tu quieras y al usar 
 
 
-
+	//cuando se renderiza el componente por PRIMERA vez, se ejecutará la función getTask()
 	useEffect(() => {
 		getTask()
 	}, [])
+
+	// GET // para que retrive la informacion de esa url
 
 	const getTask = () => {
 		fetch(urlTodos)
@@ -49,11 +51,14 @@ const Home = () => {
 			.catch((err) => err);
 	};
 
+	//no es necesario (rompia el codigo)
+
 	/* useEffect(() => {
 		newTask()
 	}, [todos]); */
 
-	//POST//
+
+	//POST// esto crea nueva informacion 
 
 	const newTask = () => {
 		fetch(urlTodos, {
@@ -78,7 +83,7 @@ const Home = () => {
 			label: inputValue
 		} 
 
-		// PUT // 
+		// PUT // esto te anade informacion nueva a tu api, lo ves en consola y en el url directamente
 		
 		fetch(urlTodos, {
 			method: "PUT",
@@ -97,7 +102,7 @@ const Home = () => {
 
 	}
  
-	//COMO HAGO SYNC ENTRE FETCH Y HTML
+	// que quiero que se vea en la web. (header/caja de texto/ botonx2/label con numero de task/ borrar X)
 
 	return (
 		<div className="container text-center">
