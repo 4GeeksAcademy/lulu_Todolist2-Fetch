@@ -41,7 +41,6 @@ const Home = () => {
 
 	const getTask = () => {
 		fetch(urlTodos)
-		method="GET"
 		
 			.then((response) => response.json())
 			.then((data) => setTodos(data))
@@ -89,6 +88,7 @@ const Home = () => {
 
 	}
 
+	//COMO HAGO SYNC ENTRE FETCH Y HTML
 
 	return (
 		<div className="container text-center">
@@ -97,12 +97,12 @@ const Home = () => {
 				<li>
 					<input
 						type="text"
-						placeholder="What do you need to do?"
-						value={inputValue}
-						onChange=/* {changeInputValue} */ {urlTodos}
+						placeholder="Where is the info from the API?..."
+						value={inputValue} /* {fetch} *//*  {urlTodos} */
+						onChange={changeInputValue} 
 						onKeyDown={inputKeyPress} />
 
-					<button type="button" class="btn btn-success btn-sm onClick={addtotodolist}">Enter</button>
+					<button type="button" class="btn btn-success btn-sm onClick={addtotodolist}">Enter</button> 
 
 				</li>
 				
