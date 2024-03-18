@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+
+
 const Home = () => {
 	const [inputValue, setInputValue] = useState("");
 	const [todos, setTodos] = useState([]);
@@ -43,13 +45,13 @@ const Home = () => {
 		fetch(urlTodos)
 		
 			.then((response) => response.json())
-			.then((data) => setTodos(data))
+			.then((todos) => setTodos(todos))
 			.catch((err) => err);
 	};
 
-	useEffect(() => {
+	/* useEffect(() => {
 		newTask()
-	}, [todos]);
+	}, [todos]); */
 
 	//POST//
 
@@ -61,20 +63,23 @@ const Home = () => {
 				'Content-Type': 'application/json'
 			}
 		})
-			.then((response) => { return response.json() })
+			.then((response) => {
+				console.log(response)
+				return response.json() })
 			.then((data) => { console.log(data) })
-			.catch((err) => { return err })
+			.catch((err) => { console.log(err) })
+
 	};
 
 	const updateTodo = () => {
+		console.log("hola!!!!!")
 		const newTodo = {
 			done: false,
 			label: inputValue
-		}
+		} 
 
-
-		// PUT //
-
+		// PUT // 
+		
 		fetch(urlTodos, {
 			method: "PUT",
 			body: JSON.stringify([...todos, newTodo]),
@@ -82,12 +87,16 @@ const Home = () => {
 				'Content-Type': 'application/json'
 			}
 		})
-			.then((response) => { return response.json() })
-			.then((data) => { console.log(data) })
-			.catch((err) => { return err })
+			.then((response) => { 
+				console.log(response)
+				return response.json() })
+			.then((data) => {
+				 setTodos([...todos, newTodo])
+				 console.log(data) })
+			.catch((err) => { console.log(err) })
 
 	}
-
+ 
 	//COMO HAGO SYNC ENTRE FETCH Y HTML
 
 	return (
@@ -102,7 +111,7 @@ const Home = () => {
 						onChange={changeInputValue} 
 						onKeyDown={inputKeyPress} />
 
-					<button type="button" class="btn btn-success btn-sm onClick={addtotodolist}">Enter</button> 
+					<button type="button" className="btn btn-success btn-sm" onClick={updateTodo}>Enter</button> 
 
 				</li>
 				
