@@ -36,26 +36,24 @@ const Home = () => {
 	                //esta url, al final cambiamos el user naame por lo que tu quieras y al usar 
 
 
-	//cuando se renderiza el componente por PRIMERA vez, se ejecutará la función getTask()
-	useEffect(() => {
-		getTask()
-	}, [])
-
+	
 	// GET // para que retrive la informacion de esa url
 
 	const getTask = () => {
 		fetch(urlTodos)
 		
-			.then((response) => response.json())
+		
+			.then((response) => {console.log(response.json())
+			return response.json()} )
 			.then((todos) => setTodos(todos))
 			.catch((err) => err);
 	};
 
 	//no es necesario (rompia el codigo)
 
-	/* useEffect(() => {
+	useEffect(() => {
 		newTask()
-	}, [todos]); */
+	}, [todos]);
 
 
 	//POST// esto crea nueva informacion 
@@ -63,7 +61,7 @@ const Home = () => {
 	const newTask = () => {
 		fetch(urlTodos, {
 			method: "POST",
-			body: JSON.stringify(todos),
+			body: JSON.stringify([]),
 			headers: {
 				'Content-Type': 'application/json'
 			}
@@ -101,12 +99,19 @@ const Home = () => {
 			.catch((err) => { console.log(err) })
 
 	}
+
+	//cuando se renderiza el componente por PRIMERA vez, se ejecutará la función getTask()
+	useEffect(() => {
+		getTask()
+	}, [])
+
  
-	// que quiero que se vea en la web. (header/caja de texto/ botonx2/label con numero de task/ borrar X)
+	// Lo que quiero que se vea en la web. (header/caja de texto/ botonx2/label con numero de task/ borrar X)
 
 	return (
+
 		<div className="container text-center">
-			<h1>My todos </h1>
+			<h1> My todos</h1>
 			<ul>
 				<li>
 					<input
@@ -114,7 +119,7 @@ const Home = () => {
 						placeholder="Where is the info from the API?..."
 						value={inputValue} /* {fetch} *//*  {urlTodos} */
 						onChange={changeInputValue} 
-						onKeyDown={inputKeyPress} />
+						onKeyDown={inputKeyPress}/>
 
 					<button type="button" className="btn btn-success btn-sm" onClick={updateTodo}>Enter</button> 
 
@@ -123,7 +128,7 @@ const Home = () => {
 				{todos.map((value, index) => (
 					<li key={index}
 						style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', }} >
-						{/* {console.log(value.label)} */}
+						{console.log(value.label)}
 						{value.label}
 						
 						<button
